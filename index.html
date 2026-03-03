@@ -5,74 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exp Project</title>
     <style>
-        body { background: black; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; }
-        
-        /* 우측 상단 관리자 아이콘 */
+        body { background: black; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; }
         .admin-header { position: absolute; top: 20px; right: 20px; z-index: 100; }
         #adminIcon { font-size: 30px; cursor: pointer; background: none; border: none; color: white; }
-
-        /* 메인 Exp 로고 */
         .main-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
         .logo { font-size: 120px; font-weight: bold; margin-bottom: 20px; letter-spacing: 5px; }
-
-        /* 검은 직사각형 버튼 (합격여부 확인하기) */
-        .rect-btn {
-            width: 320px; height: 70px; background: black; color: white; border: 2px solid white;
-            font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 15px;
-        }
+        .rect-btn { width: 320px; height: 70px; background: black; color: white; border: 2px solid white; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 15px; }
         .rect-btn:hover { background: white; color: black; }
-
-        /* 지원서 작성 버튼 (심플하게) */
         .sub-btn { background: none; border: 1px solid #555; color: #888; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
-        .sub-btn:hover { color: white; border-color: white; }
+        .input-box { margin-top: 30px; display: none; }
+        input { padding: 12px; font-size: 18px; width: 280px; border: 1px solid white; background: #222; color: white; text-align: center; }
+        #resultDisplay { margin-top: 25px; font-size: 22px; color: #00FF00; min-height: 40px; }
 
-        /* 입력 및 결과 섹션 */
-        .input-box { margin-top: 30px; display: none; animation: fadeIn 0.5s; }
-        input { padding: 12px; font-size: 18px; width: 280px; border-radius: 5px; border: 1px solid white; background: #222; color: white; text-align: center; }
-        #resultDisplay { margin-top: 25px; font-size: 22px; color: #00FF00; min-height: 40px; padding: 0 20px; line-height: 1.5; }
-
-        /* 관리자 패널 */
+        /* 관리자 패널 스타일 */
         #adminPanel { display: none; background: #111; padding: 30px; width: 100%; box-sizing: border-box; border-top: 1px solid #333; }
-        .admin-input { display: block; margin: 10px auto; width: 300px; }
-        textarea { width: 300px; height: 100px; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 5px; resize: none; }
+        textarea { width: 300px; height: 80px; padding: 10px; background: #222; color: white; border: 1px solid #444; }
         .save-btn { background: white; color: black; padding: 10px 30px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* 지원자 리스트 스타일 */
+        #applicantListSection { margin-top: 30px; padding: 20px; background: #1a1a1a; border-radius: 10px; display: inline-block; min-width: 300px; }
+        .applicant-item { padding: 8px; border-bottom: 1px solid #333; color: #aaa; }
     </style>
 </head>
 <body>
 
-    <div class="admin-header">
-        <button id="adminIcon">⚙️</button>
-    </div>
+    <div class="admin-header"><button id="adminIcon">⚙️</button></div>
 
     <div class="main-container">
         <div class="logo">Exp</div>
-
         <button class="rect-btn" id="checkBtn">합격여부 확인하기</button>
-        
         <button class="sub-btn" id="goApply">지원서 작성하기</button>
-
         <div id="inputSection" class="input-box">
-            <input type="number" id="studentIdInput" placeholder="학번을 입력하세요 (예: 10314)">
+            <input type="number" id="studentIdInput" placeholder="학번을 입력하세요">
             <div id="resultDisplay"></div>
         </div>
     </div>
 
     <div id="adminPanel">
         <h2 style="color: gray;">관리자 모드</h2>
-        <input type="number" id="targetId" class="admin-input" placeholder="메시지 설정할 학번">
-        <textarea id="statusMsg" maxlength="100" placeholder="해당 학생의 합격 여부를 알려주세요 (최대 100자)"></textarea>
-        <br>
+        <input type="number" id="targetId" placeholder="메시지 설정할 학번" style="margin-bottom:10px;"><br>
+        <textarea id="statusMsg" maxlength="100" placeholder="합격 여부 메시지 (100자)"></textarea><br>
         <button id="saveBtn" class="save-btn">메시지 저장하기</button>
+        
         <button id="goFormAdmin" style="background:none; color: gray; border:none; display:block; margin: 20px auto; cursor:pointer;">[설문 문항 관리 이동]</button>
+
+        <div id="applicantListSection">
+            <h4 style="margin-top:0;">📝 지원서 작성 완료 명단</h4>
+            <button id="loadApplicants" style="margin-bottom:10px; cursor:pointer;">명단 새로고침</button>
+            <div id="listDisplay">작성된 명단이 없습니다.</div>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
-        // Firebase 설정 (기존 정보 유지)
         const firebaseConfig = {
             apiKey: "AIzaSyBryQrZLhfJoJs_0AxNZJkDglU5lxrVzzE",
             authDomain: "songdo-exp-1e5a5.firebaseapp.com",
@@ -86,60 +73,62 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- 관리자 로직 ---
+        // 관리자 진입
         document.getElementById("adminIcon").onclick = function() {
             let pw = prompt("관리자 비밀번호를 입력하세요.");
             if(pw === "Exp0001") {
-                alert("확인되었습니다.");
                 document.getElementById("adminPanel").style.display = "block";
-                window.scrollTo(0, document.body.scrollHeight); // 패널로 스크롤
-            } else {
-                alert("비밀번호가 틀렸습니다.");
-            }
+                window.scrollTo(0, document.body.scrollHeight);
+                loadApplicants(); // 패널 열릴 때 명단 자동 로드
+            } else { alert("비밀번호가 틀렸습니다."); }
         };
 
-        // 학번별 메시지 일대일 매칭 저장
+        // 명단 불러오기 기능
+        async function loadApplicants() {
+            const listDisplay = document.getElementById("listDisplay");
+            listDisplay.innerText = "불러오는 중...";
+            
+            // Firebase의 'applications' 경로에서 데이터 가져오기
+            const snapshot = await get(ref(db, "applications"));
+            
+            if(snapshot.exists()) {
+                listDisplay.innerHTML = "";
+                const data = snapshot.val();
+                for(let studentId in data) {
+                    let div = document.createElement("div");
+                    div.className = "applicant-item";
+                    div.innerText = "학번: " + studentId;
+                    listDisplay.appendChild(div);
+                }
+            } else {
+                listDisplay.innerText = "작성된 명단이 없습니다.";
+            }
+        }
+
+        document.getElementById("loadApplicants").onclick = loadApplicants;
+
+        // 메시지 저장 로직
         document.getElementById("saveBtn").onclick = async function() {
             const id = document.getElementById("targetId").value;
             const msg = document.getElementById("statusMsg").value;
-
-            if(!id || !msg) {
-                alert("학번과 메시지를 모두 입력하세요.");
-                return;
-            }
-
+            if(!id || !msg) return alert("학번과 메시지를 입력하세요.");
             await set(ref(db, "students/" + id), { message: msg });
-            alert(id + "번 학생에게 메시지가 설정되었습니다.");
-            document.getElementById("targetId").value = "";
-            document.getElementById("statusMsg").value = "";
+            alert(id + "번 저장 완료!");
         };
 
-        // --- 학생 로직 ---
-        // 합격여부 확인하기 버튼 클릭 시
+        // 학생 조회 로직
         document.getElementById("checkBtn").onclick = function() {
             alert("학번을 쳐 주세요.");
             document.getElementById("inputSection").style.display = "block";
-            document.getElementById("studentIdInput").focus();
         };
 
-        // 학번 입력 후 엔터 치면 결과 확인
-        document.getElementById("studentIdInput").addEventListener("keypress", async function(e) {
+        document.getElementById("studentIdInput").onkeypress = async function(e) {
             if(e.key === 'Enter') {
-                const id = this.value;
-                const resultDiv = document.getElementById("resultDisplay");
-                
-                resultDiv.innerText = "조회 중...";
-                const snapshot = await get(ref(db, "students/" + id));
-                
-                if(snapshot.exists()) {
-                    resultDiv.innerText = snapshot.val().message;
-                } else {
-                    resultDiv.innerText = "해당 학번으로 등록된 결과가 없습니다.";
-                }
+                const snapshot = await get(ref(db, "students/" + this.value));
+                document.getElementById("resultDisplay").innerText = snapshot.exists() ? snapshot.val().message : "정보가 없습니다.";
             }
-        });
+        };
 
-        // 페이지 이동 버튼들
         document.getElementById("goApply").onclick = () => window.location.href = "apply.html";
         document.getElementById("goFormAdmin").onclick = () => window.location.href = "form-admin.html";
     </script>
