@@ -4,48 +4,20 @@
 <meta charset="UTF-8">
 <title>지원서 작성</title>
 <style>
-body{
-    background:black;
-    color:white;
-    text-align:center;
-    font-family:Arial;
-}
-.container{
-    width:500px;
-    margin:50px auto;
-}
-input, textarea{
-    width:100%;
-    margin-top:15px;
-    padding:10px;
-    font-size:16px;
-}
-button{
-    margin-top:20px;
-    padding:15px;
-    width:100%;
-    background:white;
-    color:black;
-    font-size:18px;
-    cursor:pointer;
-}
-.questionBox{
-    text-align:left;
-    margin-top:20px;
-}
+body{background:black;color:white;text-align:center;font-family:Arial;}
+.container{width:500px;margin:50px auto;}
+input,textarea{width:100%;margin-top:15px;padding:10px;font-size:16px;}
+button{margin-top:20px;padding:15px;width:100%;background:white;color:black;font-size:18px;cursor:pointer;}
+.questionBox{text-align:left;margin-top:20px;}
 </style>
 </head>
 <body>
 
 <div class="container">
 <h1>지원서 작성</h1>
-
 <input type="text" id="studentId" placeholder="학번 입력">
-
 <div id="formArea"></div>
-
 <button id="submitBtn">제출하기</button>
-
 <p id="message"></p>
 </div>
 
@@ -55,19 +27,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "🔥여기에네꺼🔥",
-  authDomain: "🔥여기에네꺼🔥",
-  databaseURL: "🔥여기에네꺼🔥",
-  projectId: "🔥여기에네꺼🔥",
-  storageBucket: "🔥여기에네꺼🔥",
-  messagingSenderId: "🔥여기에네꺼🔥",
-  appId: "🔥여기에네꺼🔥"
+  apiKey: "AIzaSyBryQrZLhfJoJs_0AxNZJkDglU5lxrVzzE",
+  authDomain: "songdo-exp-1e5a5.firebaseapp.com",
+  databaseURL: "https://songdo-exp-1e5a5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "songdo-exp-1e5a5",
+  storageBucket: "songdo-exp-1e5a5.firebasestorage.app",
+  messagingSenderId: "28967825486",
+  appId: "1:28967825486:web:fb67a5ca2da1cb4996931f"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🔥 설문 질문 불러오기
 const snapshot = await get(ref(db, "form/questions"));
 
 let questions = [];
@@ -76,6 +47,7 @@ let index = 0;
 if(snapshot.exists()){
     const data = snapshot.val();
     for(let key in data){
+
         questions.push(data[key]);
 
         let div = document.createElement("div");
@@ -89,20 +61,17 @@ if(snapshot.exists()){
 
         div.appendChild(label);
         div.appendChild(textarea);
-
         document.getElementById("formArea").appendChild(div);
 
         index++;
     }
 }
 
-// 🔥 제출
 document.getElementById("submitBtn").onclick = async function(){
 
     let studentId = document.getElementById("studentId").value;
-
     if(!studentId){
-        alert("학번을 입력하세요.");
+        alert("학번 입력하세요");
         return;
     }
 
@@ -120,6 +89,5 @@ document.getElementById("submitBtn").onclick = async function(){
 };
 
 </script>
-
 </body>
 </html>
