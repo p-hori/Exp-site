@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Exp</title>
+<style>
+body{
+    margin:0;
+    background:black;
+    color:white;
+    font-family:Arial, sans-serif;
+    text-align:center;
+}
+#title{
+    font-size:120px;
+    margin-top:180px;
+}
+#admin{
+    position:absolute;
+    right:20px;
+    top:20px;
+    font-size:28px;
+    cursor:pointer;
+}
+#checkBtn{
+    margin-top:80px;
+    background:black;
+    border:2px solid white;
+    padding:20px 60px;
+    font-size:25px;
+    cursor:pointer;
+    color:white;
+}
+input{
+    margin-top:20px;
+    padding:10px;
+    font-size:18px;
+}
+#output{
+    margin-top:20px;
+    font-size:22px;
+}
+</style>
+</head>
+<body>
+
+<div id="admin">⚙</div>
+<div id="title">Exp</div>
+
+<button id="checkBtn">합격여부 확인하기</button>
+
+<div id="resultArea"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBryQrZLhfJoJs_0AxNZJkDglU5lxrVzzE",
+  authDomain: "songdo-exp-1e5a5.firebaseapp.com",
+  databaseURL: "https://songdo-exp-1e5a5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "songdo-exp-1e5a5",
+  storageBucket: "songdo-exp-1e5a5.firebasestorage.app",
+  messagingSenderId: "28967825486",
+  appId: "1:28967825486:web:fb67a5ca2da1cb4996931f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// 관리자 기능
+document.getElementById("admin").onclick = async function(){
+    let pw = prompt("비밀번호를 입력하세요");
+    if(pw === "tj03069002!"){
+        let studentId = prompt("학번을 입력해주세요 (예: 10314)");
+        if(!studentId) return;
+
+        let message = prompt("해당 학생의 합격 여부를 입력하세요 (100자 이내)");
+        if(!message) return;
+
+        if(message.length > 100){
+            alert("100자 이하로 입력하세요.");
+            return;
+        }
+
+        await set(ref(db, "students/" + studentId), message);
+        alert("저장 완료");
+    }else{
+        alert("비밀번호가 틀렸습니다.");
+    }
+};
+
+// 학생 조회 버튼
+document.getElementById("checkBtn").onclick = function(){
+    document.getElementById("resultArea").innerHTML = 
+    '<p>학번을 입력해주세요</p>' +
+    '<input id="inputId" type="text"><br>' +
+    '<button onclick="checkResult()">확인</button>' +
+    '<p id="output"></p>';
+};
+
+window.checkResult = async function(){
+    let inputId = document.getElementById("inputId").value;
+    const snapshot = await get(ref(db, "students/" + inputId));
+    if(snapshot.exists()){
+        document.getElementById("output").innerText = snapshot.val();
+    }else{
+        document.getElementById("output").innerText = "등록되지 않은 학번입니다.";
+    }
+};
+
+</script>
+
+</body>
+</html>
