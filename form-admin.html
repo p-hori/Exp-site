@@ -4,40 +4,19 @@
 <meta charset="UTF-8">
 <title>설문 양식 작성</title>
 <style>
-body{
-    background:black;
-    color:white;
-    text-align:center;
-    font-family:Arial;
-}
-.container{
-    width:500px;
-    margin:50px auto;
-}
-input{
-    width:100%;
-    margin-top:10px;
-    padding:10px;
-}
-button{
-    margin-top:15px;
-    padding:10px;
-    background:white;
-    color:black;
-    cursor:pointer;
-}
+body{background:black;color:white;text-align:center;font-family:Arial;}
+.container{width:500px;margin:50px auto;}
+input{width:100%;margin-top:10px;padding:10px;}
+button{margin-top:15px;padding:10px;background:white;color:black;cursor:pointer;}
 </style>
 </head>
 <body>
 
 <div class="container">
 <h1>지원서 설문 만들기</h1>
-
 <div id="questionArea"></div>
-
 <button id="addQuestion">질문 추가</button>
 <button id="saveForm">설문 저장</button>
-
 <p id="message"></p>
 </div>
 
@@ -47,13 +26,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  databaseURL: "YOUR_DB_URL",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_BUCKET",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBryQrZLhfJoJs_0AxNZJkDglU5lxrVzzE",
+  authDomain: "songdo-exp-1e5a5.firebaseapp.com",
+  databaseURL: "https://songdo-exp-1e5a5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "songdo-exp-1e5a5",
+  storageBucket: "songdo-exp-1e5a5.firebasestorage.app",
+  messagingSenderId: "28967825486",
+  appId: "1:28967825486:web:fb67a5ca2da1cb4996931f"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -61,16 +40,14 @@ const db = getDatabase(app);
 
 let questionCount = 0;
 
-// 질문 추가 버튼
 document.getElementById("addQuestion").onclick = function(){
     let input = document.createElement("input");
-    input.placeholder = "질문 내용을 입력하세요";
+    input.placeholder = "질문 입력";
     input.id = "q" + questionCount;
     document.getElementById("questionArea").appendChild(input);
     questionCount++;
 };
 
-// 설문 저장
 document.getElementById("saveForm").onclick = async function(){
 
     let questions = {};
@@ -83,11 +60,9 @@ document.getElementById("saveForm").onclick = async function(){
     }
 
     await set(ref(db, "form/questions"), questions);
-
     document.getElementById("message").innerText = "설문 저장 완료!";
 };
 
 </script>
-
 </body>
 </html>
