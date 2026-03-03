@@ -60,12 +60,10 @@ body{
 <button class="mainBtn" id="checkBtn">합격여부 확인하기</button>
 <button class="mainBtn" id="applyBtn">지원하기</button>
 
-<div id="resultArea"></div>
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBryQrZLhfJoJs_0AxNZJkDglU5lxrVzzE",
@@ -80,26 +78,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 관리자 패널 열기
+// 관리자 패널 토글
 document.getElementById("admin").onclick = function(){
     let panel = document.getElementById("adminPanel");
     panel.style.display = panel.style.display === "none" ? "block" : "none";
 };
 
-// 합격여부 작성하기
+// 합격여부 작성
 document.getElementById("writeResult").onclick = async function(){
-    let pw = prompt("비밀번호를 입력하세요");
+    let pw = prompt("비밀번호 입력");
     if(pw !== "Exp0001"){
-        alert("비밀번호가 틀렸습니다.");
+        alert("비밀번호 틀림");
         return;
     }
 
-    let studentId = prompt("학번을 입력해주세요 (예: 10314)");
+    let studentId = prompt("학번 입력");
     if(!studentId) return;
 
-    let message = prompt("합격/불합격 메시지를 입력하세요 (100자 이내)");
+    let message = prompt("합격/불합격 메시지 입력 (100자 이내)");
     if(!message || message.length > 100){
-        alert("100자 이하로 입력하세요.");
+        alert("100자 이하로 입력");
         return;
     }
 
@@ -107,36 +105,24 @@ document.getElementById("writeResult").onclick = async function(){
     alert("저장 완료");
 };
 
-// 지원서 작성하기 → 새 페이지 이동
+// 🔥 관리자 설문 제작 페이지 이동
 document.getElementById("writeApply").onclick = function(){
+    window.location.href = "form-admin.html";
+};
+
+// 지원하기
+document.getElementById("applyBtn").onclick = function(){
     window.location.href = "apply.html";
 };
 
 // 합격여부 확인
 document.getElementById("checkBtn").onclick = function(){
-    document.getElementById("resultArea").innerHTML = 
-    '<p>학번을 입력해주세요</p>' +
-    '<input id="inputId" type="text"><br>' +
-    '<button onclick="checkResult()">확인</button>' +
-    '<p id="output"></p>';
-};
-
-window.checkResult = async function(){
-    let inputId = document.getElementById("inputId").value;
-    const snapshot = await get(ref(db, "students/" + inputId));
-    if(snapshot.exists()){
-        document.getElementById("output").innerText = snapshot.val();
-    }else{
-        document.getElementById("output").innerText = "등록되지 않은 학번입니다.";
+    let studentId = prompt("학번 입력");
+    if(studentId){
+        window.location.href = "result.html?studentId=" + studentId;
     }
-};
-
-// 지원하기 버튼
-document.getElementById("applyBtn").onclick = function(){
-    window.location.href = "apply.html";
 };
 
 </script>
 </body>
 </html>
-
