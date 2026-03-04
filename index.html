@@ -5,134 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exp Project</title>
     <style>
-        /* 기본 배경 및 폰트 */
-        body { background: #0a0a0a; color: white; text-align: center; font-family: 'Pretendard', 'Arial', sans-serif; margin: 0; }
-        
-        .admin-header { position: absolute; top: 20px; right: 20px; z-index: 100; }
-        #adminIcon { font-size: 24px; cursor: pointer; background: none; border: none; color: #444; transition: 0.3s; }
-        #adminIcon:hover { color: white; }
-
-        .main-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-
-        /* 로고 영역: 어두운 파란색 직사각형 포인트 */
-        .logo-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 40px;
-        }
-        .logo-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -45%); /* 글자 위치에 맞춰 미세 조정 */
-            width: 260px; /* 직사각형 가로 길이 */
-            height: 100px; /* 직사각형 세로 길이 */
-            background: #001f3f; /* 어두운 파란색 (Navy) */
-            z-index: -1; /* 글자 뒤로 배치 */
-            border-radius: 4px;
-        }
-      /* 로고 배경: 깊이감 있는 남색 직사각형 */
-        .logo-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -45%);
-            width: 280px;
-            height: 110px;
-            background: linear-gradient(135deg, #001a33 0%, #000a1a 100%); /* 깊은 심해 색상 */
-            z-index: -1;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 229, 255, 0.3); /* 은은한 외곽선 */
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .logo { 
-            font-size: 110px; 
-            font-weight: 900; 
-            letter-spacing: 8px; 
-            text-transform: uppercase;
-            margin: 0;
-            line-height: 1;
-
-            /* Liquid Glass 효과의 핵심: 그라데이션과 투명도 */
-            background: linear-gradient(to bottom, 
-                #ffffff 0%, 
-                #80dfff 40%, 
-                #00aaff 50%, 
-                #0044cc 60%, 
-                #001133 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-
-            /* 글자 테두리: 유리 질감을 살리는 밝은 파란색 */
-            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.6);
-
-            /* 입체감과 광택을 주는 다중 그림자 */
-            filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.8)) /* 내부 발광 */
-                    drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.8)); /* 바닥 그림자 */
-            
-            position: relative;
-        }
-
-        /* 글자 위에 반사광(하이라이트) 느낌 추가 */
-        .logo::after {
-            content: 'EXP';
-            position: absolute;
-            left: 0;
-            top: 0;
-            z-index: 2;
-            background: linear-gradient(to bottom, 
-                rgba(255,255,255,0.8) 0%, 
-                rgba(255,255,255,0) 50%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0.6;
-        }
-        }
-        }
-
-        /* 입력창 스타일 */
-        .input-box { margin-bottom: 20px; }
-        input.student-input { 
-            padding: 16px; 
-            font-size: 18px; 
-            width: 300px; 
-            border: 1px solid #333; 
-            background: #1a1a1a; 
+        /* 1. 전체 배경 및 레이아웃 */
+        body { 
+            background: radial-gradient(circle at center, #001529 0%, #000810 100%); 
             color: white; 
             text-align: center; 
-            border-radius: 8px; 
-            outline: none; 
-            transition: 0.3s;
+            font-family: 'Pretendard', 'Arial', sans-serif; 
+            margin: 0; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        input.student-input:focus { border-color: #0044cc; box-shadow: 0 0 10px rgba(0, 68, 204, 0.5); }
 
-        /* 조회 버튼 스타일 */
+        .admin-header { position: absolute; top: 20px; right: 20px; z-index: 100; }
+        #adminIcon { font-size: 24px; cursor: pointer; background: none; border: none; color: rgba(255,255,255,0.2); transition: 0.3s; }
+        #adminIcon:hover { color: white; }
+
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* 2. 로고 영역: 리얼 글래스모피즘 */
+        .logo-wrapper {
+            position: relative;
+            padding: 40px 80px;
+            margin-bottom: 50px;
+        }
+        .logo-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 229, 255, 0.1);
+            z-index: -1;
+        }
+        .logo { 
+            font-size: 110px; 
+            font-weight: 800; 
+            letter-spacing: 12px;
+            margin: 0;
+            background: linear-gradient(180deg, #fff 30%, #7dd3fc 50%, #0ea5e9 70%, #075985 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.4));
+        }
+
+        /* 3. 입력창 & 버튼 (세련된 다크 스타일) */
+        .input-box { margin-bottom: 20px; }
+        input.student-input { 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            width: 320px;
+            padding: 18px;
+            font-size: 16px;
+            color: #fff;
+            text-align: center;
+            outline: none;
+            transition: all 0.4s;
+        }
+        input.student-input:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
         .rect-btn { 
-            width: 334px; 
+            width: 358px; 
             height: 60px; 
-            background: #0044cc; /* 버튼도 파란색 계열로 통일 */
-            color: white; 
-            border: none; 
-            font-size: 18px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            border-radius: 8px; 
+            background: linear-gradient(90deg, #0284c7, #0369a1);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3);
         }
-        .rect-btn:hover { background: #0055ff; transform: translateY(-2px); }
-        .rect-btn:active { transform: translateY(0); }
+        .rect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(2, 132, 199, 0.5);
+            background: linear-gradient(90deg, #0ea5e9, #0284c7);
+        }
         
-        /* 결과창 스타일 */
-        #resultDisplay { margin-top: 30px; font-size: 20px; color: #00FF00; min-height: 40px; font-weight: 500; }
+        #resultDisplay { margin-top: 35px; font-size: 20px; color: #00FF00; min-height: 40px; font-weight: 500; }
 
-        /* 관리자 패널 (기존 로직 유지) */
-        #adminPanel { display: none; background: #111; padding: 40px; width: 100%; box-sizing: border-box; border-top: 1px solid #333; }
-        textarea { width: 300px; height: 80px; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 5px; }
-        .save-btn { background: white; color: black; padding: 12px 30px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; border-radius: 5px; }
-        
-        #applicantListSection { margin-top: 30px; padding: 20px; background: #1a1a1a; border-radius: 10px; display: inline-block; min-width: 320px; text-align: left; }
-        .applicant-item { padding: 10px; border-bottom: 1px solid #333; color: #aaa; font-size: 14px; }
+        /* 4. 관리자 패널 */
+        #adminPanel { display: none; background: #050505; padding: 40px; width: 100%; box-sizing: border-box; border-top: 1px solid #222; }
+        textarea { width: 300px; height: 80px; padding: 10px; background: #111; color: white; border: 1px solid #333; border-radius: 8px; }
+        .save-btn { background: #eee; color: black; padding: 12px 30px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; border-radius: 8px; }
+        #applicantListSection { margin-top: 30px; padding: 20px; background: #0a0a0a; border: 1px solid #222; border-radius: 12px; display: inline-block; min-width: 320px; text-align: left; }
     </style>
 </head>
 <body>
@@ -155,17 +123,17 @@
     </div>
 
     <div id="adminPanel">
-        <h2 style="color: #666;">관리자 모드</h2>
-        <input type="number" id="targetId" placeholder="학번 입력" style="margin-bottom:10px; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 5px;"><br>
-        <textarea id="statusMsg" maxlength="100" placeholder="메시지 입력 (100자)"></textarea><br>
+        <h2 style="color: #444;">Admin Mode</h2>
+        <input type="number" id="targetId" placeholder="학번 입력" style="margin-bottom:10px; padding: 10px; background: #111; color: white; border: 1px solid #333; border-radius: 8px;"><br>
+        <textarea id="statusMsg" maxlength="100" placeholder="결과 메시지 입력"></textarea><br>
         <button id="saveBtn" class="save-btn">메시지 저장하기</button>
         
-        <button id="goFormAdmin" style="background:none; color: #555; border:none; display:block; margin: 25px auto; cursor:pointer;">[설문 문항 관리 이동]</button>
+        <button id="goFormAdmin" style="background:none; color: #333; border:none; display:block; margin: 25px auto; cursor:pointer;">[Manage Questions]</button>
 
         <div id="applicantListSection">
-            <h4 style="margin: 0 0 15px 0; color: #888;">📝 지원서 작성 완료 명단</h4>
-            <button id="loadApplicants" style="margin-bottom:15px; cursor:pointer; padding: 6px 12px; background: #333; color: #ccc; border: none; border-radius: 4px;">명단 새로고침</button>
-            <div id="listDisplay">작성된 명단이 없습니다.</div>
+            <h4 style="margin: 0 0 15px 0; color: #666;">📝 Applicant List</h4>
+            <button id="loadApplicants" style="margin-bottom:15px; cursor:pointer; padding: 6px 12px; background: #222; color: #888; border: 1px solid #333; border-radius: 6px;">Refresh</button>
+            <div id="listDisplay">No applicants found.</div>
         </div>
     </div>
 
@@ -173,6 +141,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
+        // 기존에 사용하시던 Firebase 설정값 그대로 유지
         const firebaseConfig = {
             apiKey: "AIzaSyBryQrZLhfJoJs_0AxNZJkDglU5lxrVzzE",
             authDomain: "songdo-exp-1e5a5.firebaseapp.com",
@@ -186,30 +155,30 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // 관리자 진입
+        // [이전과 동일한 기능 로직들...]
         document.getElementById("adminIcon").onclick = function() {
             let pw = prompt("관리자 비밀번호를 입력하세요.");
             if(pw === "Exp0001") {
                 document.getElementById("adminPanel").style.display = "block";
-                window.scrollTo(0, document.body.scrollHeight);
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 loadApplicants(); 
             } else { alert("비밀번호가 틀렸습니다."); }
         };
 
         async function loadApplicants() {
             const listDisplay = document.getElementById("listDisplay");
-            listDisplay.innerText = "불러오는 중...";
+            listDisplay.innerText = "Loading...";
             const snapshot = await get(ref(db, "applications"));
             if(snapshot.exists()) {
                 listDisplay.innerHTML = "";
                 const data = snapshot.val();
                 for(let studentId in data) {
                     let div = document.createElement("div");
-                    div.className = "applicant-item";
+                    div.style.cssText = "padding: 10px; border-bottom: 1px solid #111; color: #555; font-size: 14px;";
                     div.innerText = "학번: " + studentId;
                     listDisplay.appendChild(div);
                 }
-            } else { listDisplay.innerText = "작성된 명단이 없습니다."; }
+            } else { listDisplay.innerText = "No data."; }
         }
 
         document.getElementById("loadApplicants").onclick = loadApplicants;
@@ -250,5 +219,3 @@
     </script>
 </body>
 </html>
-
-
