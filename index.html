@@ -31,27 +31,63 @@
             z-index: -1; /* 글자 뒤로 배치 */
             border-radius: 4px;
         }
-      .logo { 
+      /* 로고 배경: 깊이감 있는 남색 직사각형 */
+        .logo-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -45%);
+            width: 280px;
+            height: 110px;
+            background: linear-gradient(135deg, #001a33 0%, #000a1a 100%); /* 깊은 심해 색상 */
+            z-index: -1;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 229, 255, 0.3); /* 은은한 외곽선 */
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo { 
             font-size: 110px; 
             font-weight: 900; 
             letter-spacing: 8px; 
             text-transform: uppercase;
             margin: 0;
             line-height: 1;
+
+            /* Liquid Glass 효과의 핵심: 그라데이션과 투명도 */
+            background: linear-gradient(to bottom, 
+                #ffffff 0%, 
+                #80dfff 40%, 
+                #00aaff 50%, 
+                #0044cc 60%, 
+                #001133 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            /* 글자 테두리: 유리 질감을 살리는 밝은 파란색 */
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.6);
+
+            /* 입체감과 광택을 주는 다중 그림자 */
+            filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.8)) /* 내부 발광 */
+                    drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.8)); /* 바닥 그림자 */
             
-            /* 글자 내부 색상: 흰색 */
-            color: white; 
+            position: relative;
+        }
 
-            /* 방법 2 적용: 연한 하늘색(Cyan) 테두리 */
-            /* -webkit-text-stroke: 2px #00e5ff; */
-
-            /* 조금 더 은은하게 빛나는 효과를 원한다면 아래 shadow를 추천합니다 */
-            text-shadow: 
-                -2px -2px 0 #00e5ff,  
-                 2px -2px 0 #00e5ff,
-                -2px  2px 0 #00e5ff,
-                 2px  2px 0 #00e5ff,
-                 0 0 15px rgba(0, 229, 255, 0.6); /* 네온처럼 살짝 번지는 효과 추가 */
+        /* 글자 위에 반사광(하이라이트) 느낌 추가 */
+        .logo::after {
+            content: 'EXP';
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 2;
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0.8) 0%, 
+                rgba(255,255,255,0) 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.6;
+        }
         }
         }
 
@@ -214,4 +250,5 @@
     </script>
 </body>
 </html>
+
 
