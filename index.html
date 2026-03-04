@@ -9,13 +9,19 @@
         .admin-header { position: absolute; top: 20px; right: 20px; z-index: 100; }
         #adminIcon { font-size: 30px; cursor: pointer; background: none; border: none; color: white; }
         .main-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .logo { font-size: 120px; font-weight: bold; margin-bottom: 20px; letter-spacing: 5px; }
-        .rect-btn { width: 320px; height: 70px; background: black; color: white; border: 2px solid white; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 15px; }
+        .logo { font-size: 120px; font-weight: bold; margin-bottom: 30px; letter-spacing: 5px; }
+        
+        /* 입력창 스타일 */
+        .input-box { margin-bottom: 15px; }
+        input.student-input { padding: 15px; font-size: 18px; width: 280px; border: 2px solid white; background: #222; color: white; text-align: center; border-radius: 5px; outline: none; }
+        input.student-input:focus { border-color: #00FF00; } /* 클릭 시 테두리 초록색 */
+
+        /* 조회 버튼 스타일 */
+        .rect-btn { width: 314px; height: 60px; background: black; color: white; border: 2px solid white; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; border-radius: 5px; }
         .rect-btn:hover { background: white; color: black; }
-        .sub-btn { background: none; border: 1px solid #555; color: #888; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
-        .input-box { margin-top: 30px; display: none; }
-        input { padding: 12px; font-size: 18px; width: 280px; border: 1px solid white; background: #222; color: white; text-align: center; }
-        #resultDisplay { margin-top: 25px; font-size: 22px; color: #00FF00; min-height: 40px; }
+        
+        /* 결과창 스타일 */
+        #resultDisplay { margin-top: 25px; font-size: 22px; color: #00FF00; min-height: 40px; font-weight: bold; }
 
         /* 관리자 패널 스타일 */
         #adminPanel { display: none; background: #111; padding: 30px; width: 100%; box-sizing: border-box; border-top: 1px solid #333; }
@@ -33,17 +39,19 @@
 
     <div class="main-container">
         <div class="logo">Exp</div>
-        <button class="rect-btn" id="checkBtn">합격여부 확인하기</button>
-        <button class="sub-btn" id="goApply">지원서 작성하기</button>
-        <div id="inputSection" class="input-box">
-            <input type="number" id="studentIdInput" placeholder="학번을 입력하세요">
-            <div id="resultDisplay"></div>
+        
+        <div class="input-box">
+            <input type="number" id="studentIdInput" class="student-input" placeholder="학번을 입력해주세요">
         </div>
+
+        <button class="rect-btn" id="checkBtn">합격여부 확인하기</button>
+        
+        <div id="resultDisplay"></div>
     </div>
 
     <div id="adminPanel">
         <h2 style="color: gray;">관리자 모드</h2>
-        <input type="number" id="targetId" placeholder="메시지 설정할 학번" style="margin-bottom:10px;"><br>
+        <input type="number" id="targetId" placeholder="메시지 설정할 학번" style="margin-bottom:10px; padding: 8px; background: #222; color: white; border: 1px solid white;"><br>
         <textarea id="statusMsg" maxlength="100" placeholder="합격 여부 메시지 (100자)"></textarea><br>
         <button id="saveBtn" class="save-btn">메시지 저장하기</button>
         
@@ -51,7 +59,7 @@
 
         <div id="applicantListSection">
             <h4 style="margin-top:0;">📝 지원서 작성 완료 명단</h4>
-            <button id="loadApplicants" style="margin-bottom:10px; cursor:pointer;">명단 새로고침</button>
+            <button id="loadApplicants" style="margin-bottom:10px; cursor:pointer; padding: 5px 10px; background: #444; color: white; border: none;">명단 새로고침</button>
             <div id="listDisplay">작성된 명단이 없습니다.</div>
         </div>
     </div>
@@ -79,8 +87,10 @@
             if(pw === "Exp0001") {
                 document.getElementById("adminPanel").style.display = "block";
                 window.scrollTo(0, document.body.scrollHeight);
-                loadApplicants(); // 패널 열릴 때 명단 자동 로드
-            } else { alert("비밀번호가 틀렸습니다."); }
+                loadApplicants(); 
+            } else { 
+                alert("비밀번호가 틀렸습니다."); 
+            }
         };
 
         // 명단 불러오기 기능
@@ -88,7 +98,6 @@
             const listDisplay = document.getElementById("listDisplay");
             listDisplay.innerText = "불러오는 중...";
             
-            // Firebase의 'applications' 경로에서 데이터 가져오기
             const snapshot = await get(ref(db, "applications"));
             
             if(snapshot.exists()) {
@@ -107,31 +116,55 @@
 
         document.getElementById("loadApplicants").onclick = loadApplicants;
 
-        // 메시지 저장 로직
+        // 메시지 저장 로직 (관리자)
         document.getElementById("saveBtn").onclick = async function() {
             const id = document.getElementById("targetId").value;
             const msg = document.getElementById("statusMsg").value;
             if(!id || !msg) return alert("학번과 메시지를 입력하세요.");
             await set(ref(db, "students/" + id), { message: msg });
             alert(id + "번 저장 완료!");
+            
+            // 저장 후 입력창 비워주기
+            document.getElementById("targetId").value = '';
+            document.getElementById("statusMsg").value = '';
         };
 
-        // 학생 조회 로직
-        document.getElementById("checkBtn").onclick = function() {
-            alert("학번을 쳐 주세요.");
-            document.getElementById("inputSection").style.display = "block";
-        };
+        // 학번 조회 핵심 로직 함수
+        async function checkStatus() {
+            const studentId = document.getElementById("studentIdInput").value;
+            const resultDisplay = document.getElementById("resultDisplay");
 
-        document.getElementById("studentIdInput").onkeypress = async function(e) {
+            if(!studentId) {
+                resultDisplay.innerText = "학번을 먼저 입력해주세요.";
+                resultDisplay.style.color = "red";
+                return;
+            }
+
+            resultDisplay.innerText = "조회 중...";
+            resultDisplay.style.color = "white";
+
+            const snapshot = await get(ref(db, "students/" + studentId));
+            if(snapshot.exists()) {
+                resultDisplay.innerText = snapshot.val().message;
+                resultDisplay.style.color = "#00FF00"; // 결과가 있으면 초록색
+            } else {
+                resultDisplay.innerText = "일치하는 학번 정보가 없습니다.";
+                resultDisplay.style.color = "red"; // 결과가 없으면 빨간색
+            }
+        }
+
+        // 버튼 클릭 시 조회
+        document.getElementById("checkBtn").onclick = checkStatus;
+
+        // 엔터키 누를 때도 조회 작동
+        document.getElementById("studentIdInput").onkeypress = function(e) {
             if(e.key === 'Enter') {
-                const snapshot = await get(ref(db, "students/" + this.value));
-                document.getElementById("resultDisplay").innerText = snapshot.exists() ? snapshot.val().message : "정보가 없습니다.";
+                checkStatus();
             }
         };
 
-        document.getElementById("goApply").onclick = () => window.location.href = "apply.html";
+        // 설문 문항 관리 이동
         document.getElementById("goFormAdmin").onclick = () => window.location.href = "form-admin.html";
     </script>
 </body>
 </html>
-
