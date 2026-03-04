@@ -50,12 +50,12 @@
             font-weight: 800; 
             letter-spacing: 12px;
             margin: 0;
-            color: #ffffff; /* 순수 흰색으로 변경 */
+            color: #ffffff;
             text-transform: uppercase;
             filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
         }
 
-        /* 3. 입력창 & 버튼 (세련된 다크 스타일) */
+        /* 3. 입력창 & 버튼 */
         .input-box { margin-bottom: 20px; }
         input.student-input { 
             background: rgba(255, 255, 255, 0.05);
@@ -94,13 +94,15 @@
             background: linear-gradient(90deg, #0ea5e9, #0284c7);
         }
         
+        /* 결과창 스타일 */
         #resultDisplay { 
             margin-top: 35px; 
-            font-size: 20px; 
-            color: #00FF00; 
+            font-size: 22px; 
             min-height: 40px; 
-            font-weight: 500;
+            font-weight: 700;
             transition: 0.3s;
+            padding: 0 20px;
+            line-height: 1.5;
         }
 
         /* 4. 관리자 패널 */
@@ -148,7 +150,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
-        // Firebase 설정 (기존 설정 유지)
         const firebaseConfig = {
             apiKey: "AIzaSyBryQrZLhfJoJs_0AxNZJkDglU5lxrVzzE",
             authDomain: "songdo-exp-1e5a5.firebaseapp.com",
@@ -162,7 +163,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // 관리자 모드 진입
         document.getElementById("adminIcon").onclick = function() {
             let pw = prompt("관리자 비밀번호를 입력하세요.");
             if(pw === "Exp0001") {
@@ -172,7 +172,6 @@
             } else { alert("비밀번호가 틀렸습니다."); }
         };
 
-        // 지원자 명단 로드
         async function loadApplicants() {
             const listDisplay = document.getElementById("listDisplay");
             listDisplay.innerText = "Loading...";
@@ -191,7 +190,6 @@
 
         document.getElementById("loadApplicants").onclick = loadApplicants;
 
-        // 관리자용 메시지 저장
         document.getElementById("saveBtn").onclick = async function() {
             const id = document.getElementById("targetId").value;
             const msg = document.getElementById("statusMsg").value;
@@ -202,24 +200,31 @@
             document.getElementById("statusMsg").value = '';
         };
 
-        // 학번 조회 (핵심 기능)
         async function checkStatus() {
             const studentId = document.getElementById("studentIdInput").value;
             const resultDisplay = document.getElementById("resultDisplay");
             
             if(!studentId) {
                 resultDisplay.innerText = "학번을 먼저 입력해주세요.";
-                resultDisplay.style.color = "#ff4444";
+                resultDisplay.style.color = "#ffbaba";
                 return;
             }
 
             resultDisplay.innerText = "조회 중...";
-            resultDisplay.style.color = "white";
+            resultDisplay.style.color = "#ffffff"; // 기본 흰색
 
             const snapshot = await get(ref(db, "students/" + studentId));
             if(snapshot.exists()) {
-                resultDisplay.innerText = snapshot.val().message;
-                resultDisplay.style.color = "#00FF00";
+                const message = snapshot.val().message;
+                resultDisplay.innerText = message;
+
+                if(message.includes("불합격")) {
+                    resultDisplay.style.color = "#ff4444"; // 빨간색
+                } else if(message.includes("합격")) {
+                    resultDisplay.style.color = "#00FF00"; // 초록색
+                } else {
+                    resultDisplay.style.color = "#ffffff"; // 기본 흰색
+                }
             } else {
                 resultDisplay.innerText = "일치하는 학번 정보가 없습니다.";
                 resultDisplay.style.color = "#ff4444";
